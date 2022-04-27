@@ -47,13 +47,28 @@ namespace Mirror
         public override void Awake()
         {
             TelepathyConfig conf = new TelepathyConfig();
-            if (!File.Exists("TelepathyConfig.json"))
+
+            bool noConfig = bool.Parse(Environment.GetEnvironmentVariable("NO_CONFIG") ?? "false");
+
+            if (!File.Exists("TelepathyConfig.json") && !noConfig)
             {
                 File.WriteAllText("TelepathyConfig.json", JsonConvert.SerializeObject(conf, Formatting.Indented));
             }
             else
             {
-                conf = JsonConvert.DeserializeObject<TelepathyConfig>(File.ReadAllText("TelepathyConfig.json"));
+                if (noConfig)
+                {
+                    conf = new TelepathyConfig();
+                    conf.NoDelay = bool.Parse(Environment.GetEnvironmentVariable("NoDelay") ?? "true");
+                    conf.SendTimeout = int.Parse(Environment.GetEnvironmentVariable("SendTimeout") ?? "5000");
+                    conf.ReceiveTimeout = int.Parse(Environment.GetEnvironmentVariable("ReceiveTimeout") ?? "30000");
+                    conf.serverMaxMessageSize = int.Parse(Environment.GetEnvironmentVariable("serverMaxMessageSize") ?? "16384");
+                    conf.serverMaxReceivesPerTick = int.Parse(Environment.GetEnvironmentVariable("serverMaxReceivesPerTick") ?? "10000");
+                    conf.serverSendQueueLimitPerConnection = int.Parse(Environment.GetEnvironmentVariable("serverSendQueueLimitPerConnection") ?? "10000");
+                    conf.serverReceiveQueueLimitPerConnection = int.Parse(Environment.GetEnvironmentVariable("serverReceiveQueueLimitPerConnection") ?? "10000");
+                }
+                else
+                    conf = JsonConvert.DeserializeObject<TelepathyConfig>(File.ReadAllText("TelepathyConfig.json"));
             }
 
             NoDelay = conf.NoDelay;
