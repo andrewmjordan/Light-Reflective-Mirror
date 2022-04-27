@@ -82,15 +82,33 @@ namespace Mirror
         {
             Log.level = _logLevels;
 
-
             SWTConfig conf = new SWTConfig();
-            if (!File.Exists("SWTConfig.json"))
+
+            bool noConfig = bool.Parse(Environment.GetEnvironmentVariable("NO_CONFIG") ?? "false");
+
+            if (!File.Exists("SWTConfig.json") && !noConfig)
             {
                 File.WriteAllText("SWTConfig.json", JsonConvert.SerializeObject(conf, Formatting.Indented));
             }
             else
             {
-                conf = JsonConvert.DeserializeObject<SWTConfig>(File.ReadAllText("SWTConfig.json"));
+                if (noConfig)
+                {
+                    conf = new SWTConfig();
+                    conf.maxMessageSize = int.Parse(Environment.GetEnvironmentVariable("SWT_MAX_MESSAGE_SIZE") ?? "16384");
+                    conf.handshakeMaxSize = int.Parse(Environment.GetEnvironmentVariable("SWT_HANDSHAKE_MAX_SIZE") ?? "3000");
+                    conf.noDelay = bool.Parse(Environment.GetEnvironmentVariable("SWT_NO_DELAY") ?? "true");
+                    conf.sendTimeout = int.Parse(Environment.GetEnvironmentVariable("SWT_SEND_TIMEOUT") ?? "5000");
+                    conf.receiveTimeout = int.Parse(Environment.GetEnvironmentVariable("SWT_RECEIVE_TIMEOUT") ?? "20000");
+                    conf.serverMaxMessagesPerTick = int.Parse(Environment.GetEnvironmentVariable("SWT_SERVER_MAX_MESSAGES_PER_TICK") ?? "10000");
+                    conf.waitBeforeSend = bool.Parse(Environment.GetEnvironmentVariable("SWT_WAIT_BEFORE_SEND") ?? "false");
+                    conf.clientUseWss = bool.Parse(Environment.GetEnvironmentVariable("SWT_CLIENT_USE_WSS") ?? "false");
+                    conf.sslEnabled = bool.Parse(Environment.GetEnvironmentVariable("SWT_SSL_ENABLED") ?? "false");
+                    conf.sslCertJson = Environment.GetEnvironmentVariable("SWT_SSL_CERT_JSON") ?? "./cert.json";
+                    conf.sslProtocols = (SslProtocols)int.Parse(Environment.GetEnvironmentVariable("SWT_SSL_PROTOCOLS") ?? "SslProtocols.Tls12");
+                }
+                else
+                    conf = JsonConvert.DeserializeObject<SWTConfig>(File.ReadAllText("SWTConfig.json"));
             }
 
             maxMessageSize = conf.maxMessageSize;
