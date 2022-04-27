@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+# Build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /lrm
 COPY ./LRM.Node ./
 RUN dotnet publish LRM.sln --runtime ubuntu.20.04-x64 -c Release -o /out/
-
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+# Run
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /lrm
 COPY --from=build /out/ .
 
