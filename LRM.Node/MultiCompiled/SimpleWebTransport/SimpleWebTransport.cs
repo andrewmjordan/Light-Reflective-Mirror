@@ -105,7 +105,7 @@ namespace Mirror
                     conf.clientUseWss = bool.Parse(Environment.GetEnvironmentVariable("SWT_CLIENT_USE_WSS") ?? "false");
                     conf.sslEnabled = bool.Parse(Environment.GetEnvironmentVariable("SWT_SSL_ENABLED") ?? "false");
                     conf.sslCertJson = Environment.GetEnvironmentVariable("SWT_SSL_CERT_JSON") ?? "./cert.json";
-                    conf.sslProtocols = (SslProtocols)int.Parse(Environment.GetEnvironmentVariable("SWT_SSL_PROTOCOLS") ?? "SslProtocols.Tls12");
+                    conf.sslProtocols = (SslProtocols)int.Parse(Environment.GetEnvironmentVariable("SWT_SSL_PROTOCOLS") ?? ((int)SslProtocols.Tls12).ToString());
                 }
                 else
                     conf = JsonConvert.DeserializeObject<SWTConfig>(File.ReadAllText("SWTConfig.json"));
