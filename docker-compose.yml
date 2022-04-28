@@ -1,0 +1,12 @@
+services:
+  matchmaking:
+    image: rematch
+    ports:
+      - 443:8080
+      - 7776:7776
+      - 7777:7777
+    restart: always
+    env_file:
+      - .env
+    environment:
+      AUTH_KEY: secret
