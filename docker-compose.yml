@@ -2,12 +2,11 @@ services:
   matchmaking:
     image: rematch
     ports:
-      - 8080:8080
+      - 443:8080
       - 7776:7776
       - 7777:7777
     restart: always
+    env_file:
+      - .env
     environment:
       AUTH_KEY: secret
-      #CERT_PASSWORD: <YOUR_CERT_PASSWORD_HERE>
-      #CERT_CONTENT: <YOUR_BASE64_CERT_CONTENT_HERE>
-      #CERT_CONTENT_IS_BASE64: true
