@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text;
 
 namespace Mirror.SimpleWeb
 {
@@ -42,14 +43,16 @@ namespace Mirror.SimpleWeb
 				cert = new Cert
 				{
 					path = Environment.GetEnvironmentVariable("CERT_PATH") ?? "cert.pfx",
-					password = Environment.GetEnvironmentVariable("CERT_PASSWORD") ?? string.Empty
+					password = Environment.GetEnvironmentVariable("CERT_PASSWORD") ?? string.Empty,
 				};
 			}
 
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CERT_CONTENT")))
 			{
-                Directory.CreateDirectory(Path.GetDirectoryName(cert.path));
-                File.WriteAllText(cert.path, Environment.GetEnvironmentVariable("CERT_CONTENT"));
+                cert.path = Path.GetTempFileName();
+                var bytes = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("CERT_CONTENT"));
+                File.WriteAllBytes(cert.path, bytes);
+                Console.WriteLine(cert.path);
 			}
 
             if (string.IsNullOrEmpty(cert.path))
