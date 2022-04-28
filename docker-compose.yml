@@ -1,6 +1,6 @@
 services:
   matchmaking:
-    image: rematch
+    image: andtechstudios/rematch
     ports:
       - 443:8080
       - 7776:7776
@@ -8,5 +8,3 @@ services:
     restart: always
     env_file:
       - .env
-    environment:
-      AUTH_KEY: secret
