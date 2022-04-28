@@ -1,5 +1,7 @@
 using Newtonsoft.Json;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Mirror.SimpleWeb
 {
@@ -30,8 +32,34 @@ namespace Mirror.SimpleWeb
 
         internal static Cert LoadCertJson(string certJsonPath)
         {
-            string json = File.ReadAllText(certJsonPath);
-            Cert cert = JsonConvert.DeserializeObject<Cert>(json);
+            Cert cert;
+            if (File.Exists(certJsonPath))
+            {
+                string json = File.ReadAllText(certJsonPath);
+                cert = JsonConvert.DeserializeObject<Cert>(json);
+            }
+            else
+            {
+				cert = new Cert
+				{
+					path = Environment.GetEnvironmentVariable("CERT_PATH") ?? "cert.pfx",
+					password = Environment.GetEnvironmentVariable("CERT_PASSWORD") ?? string.Empty,
+				};
+			}
+
+            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CERT_CONTENT")))
+			{
+                byte[] data;
+                if (Environment.GetEnvironmentVariable("CERT_CONTENT_IS_BASE_64") == "true")
+                {
+                    data = Convert.FromBase64String(Environment.GetEnvironmentVariable("CERT_CONTENT"));
+                }
+                else
+				{
+                    data = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("CERT_CONTENT"));
+				}
+                File.WriteAllBytes(cert.path, data);
+            }
 
             if (string.IsNullOrEmpty(cert.path))
             {
