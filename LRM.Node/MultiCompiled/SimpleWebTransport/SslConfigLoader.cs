@@ -49,7 +49,6 @@ namespace Mirror.SimpleWeb
 
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CERT_CONTENT")))
 			{
-                cert.path = Path.GetTempFileName();
                 byte[] data;
                 if (Environment.GetEnvironmentVariable("CERT_CONTENT_IS_BASE_64") == "true")
                 {
