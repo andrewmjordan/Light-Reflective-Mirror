@@ -1,0 +1,12 @@
+services:
+  matchmaking:
+    image: rematch
+    ports:
+      - 8080:8080
+      - 7776:7776
+      - 7777:7777
+    restart: always
+    environment:
+      AUTH_KEY: secret
+      CERT_CONTENT: <YOUR_CERT_CONTENT_HERE>
+      CERT_PASSWORD: <YOUR_CERT_PASSWORD_HERE>
