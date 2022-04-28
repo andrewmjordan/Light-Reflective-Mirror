@@ -51,10 +51,11 @@ namespace Mirror.SimpleWeb
 			{
                 cert.path = Path.GetTempFileName();
                 Console.WriteLine();
-                Console.WriteLine(Environment.GetEnvironmentVariable("CERT_CONTENT").Length);
-                var bytes = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("CERT_CONTENT"));
-                File.WriteAllBytes(cert.path, bytes);
-                Console.WriteLine(cert.path);
+                Console.WriteLine("Encoded length: " + Environment.GetEnvironmentVariable("CERT_CONTENT").Length);
+                byte[] data = Convert.FromBase64String(Environment.GetEnvironmentVariable("CERT_CONTENT"));
+                Console.WriteLine("Decoded length: " + data.Length);
+                File.WriteAllBytes(cert.path, data);
+                Console.WriteLine("Written to: " + cert.path);
 			}
 
             if (string.IsNullOrEmpty(cert.path))
