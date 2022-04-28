@@ -50,6 +50,8 @@ namespace Mirror.SimpleWeb
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CERT_CONTENT")))
 			{
                 cert.path = Path.GetTempFileName();
+                Console.WriteLine();
+                Console.WriteLine(Environment.GetEnvironmentVariable("CERT_CONTENT").Length);
                 var bytes = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("CERT_CONTENT"));
                 File.WriteAllBytes(cert.path, bytes);
                 Console.WriteLine(cert.path);
