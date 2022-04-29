@@ -2,7 +2,7 @@ services:
   matchmaking:
     image: andtechstudios/rematch
     ports:
-      - 443:8080
+      - 8080:8080
       - 7776:7776
       - 7777:7777
     restart: always
